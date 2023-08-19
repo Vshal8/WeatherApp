@@ -4,6 +4,7 @@ import {
     useQuery,
 } from '@tanstack/react-query'
 import { getWeatherDetails } from '../queries';
+import { useMemo } from 'react';
 
 const arrWeekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
@@ -145,7 +146,7 @@ export default function Page() {
     console.log('Error is', isError)
     console.log('Data is', data)
 
-    const getCurrentDayTime = () => {
+    const getCurrentDayTime = useMemo(() => {
         let currentDay = new Date().getDay()
         currentDay = arrWeekDays[currentDay]
         let currentTime = new Date().getHours()
@@ -156,19 +157,19 @@ export default function Page() {
             currentTime = `${currentTime} AM`
         }
         return `${currentDay}, ${currentTime}`
-    }
+    }, [new Date().getHours(),new Date().getDay()])
 
-    // if (isLoading) {
-    //     return <View className='flex flex-1 items-center justify-center'>
-    //         <ActivityIndicator size={'large'} color={'#d7d7d7'} />
-    //     </View>
-    // }
+    if (isLoading) {
+        return <View className='flex flex-1 items-center justify-center'>
+            <ActivityIndicator size={'large'} color={'#d7d7d7'} />
+        </View>
+    }
 
     return <SafeAreaView className={`flex flex-1`}>
         <View className={'flex flex-1 bg-base-bg py-6 px-4'}>
             <View className={'flex flex-1 rounded-3xl bg-[#ffffff] p-4'}>
                 <Text className='text-xl font-medium'>Calicut, Kerala</Text>
-                <Text className='text-sm text-gray-text font-regular'>{getCurrentDayTime()}</Text>
+                <Text className='text-sm text-gray-text font-regular'>{getCurrentDayTime}</Text>
                 <Image source={imageSource} className='h-20 w-32 self-center mt-10' resizeMode='stretch' />
                 <Text className='text-3xl font-bold mt-2 self-center'>28</Text>
                 <Text className='text-sm text-gray-text font-regular self-center'>Partly Cloudy</Text>
