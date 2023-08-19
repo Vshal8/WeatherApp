@@ -1,4 +1,4 @@
-import { Image, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
     useQuery,
@@ -135,7 +135,11 @@ const imageSource = require('../assets/weatherUpdate.png')
 
 export default function Page() {
 
-    const { data, isLoading, isError } = useQuery(['weatherData'], getWeatherDetails)
+    const { data, isLoading, isError } = useQuery(['weatherData'], getWeatherDetails, {
+        cacheTime: 7200000, //Data is cached for two hours
+        refetchInterval: 7200000, //Data is refetched after every two hours
+        refetchIntervalInBackground: true //Fetch data after 2 hours even if app is in background state
+    })
 
     console.log('Loading is', isLoading)
     console.log('Error is', isError)
@@ -154,35 +158,41 @@ export default function Page() {
         return `${currentDay}, ${currentTime}`
     }
 
+    // if (isLoading) {
+    //     return <View className='flex flex-1 items-center justify-center'>
+    //         <ActivityIndicator size={'large'} color={'#d7d7d7'} />
+    //     </View>
+    // }
+
     return <SafeAreaView className={`flex flex-1`}>
-        <View className={'flex flex-1 bg-base-bg py-8 px-4'}>
-            <View className={'flex flex-1 rounded-3xl bg-[#ffffff] py-4 px-2'}>
-                <Text className='text-xl font-bold'>Calicut, Kerala</Text>
+        <View className={'flex flex-1 bg-base-bg py-6 px-4'}>
+            <View className={'flex flex-1 rounded-3xl bg-[#ffffff] p-4'}>
+                <Text className='text-xl font-medium'>Calicut, Kerala</Text>
                 <Text className='text-sm text-gray-text font-regular'>{getCurrentDayTime()}</Text>
                 <Image source={imageSource} className='h-20 w-32 self-center mt-10' resizeMode='stretch' />
                 <Text className='text-3xl font-bold mt-2 self-center'>28</Text>
                 <Text className='text-sm text-gray-text font-regular self-center'>Partly Cloudy</Text>
-                <View className={'flex flex-1 rounded-3xl bg-light-bg px-4 mt-4 w-full'}>
-                    <Text className='text-lg font-bold mt-4'>This week</Text>
+                <View className={'flex flex-1 rounded-3xl bg-light-bg p-4'}>
+                    <Text className='text-lg font-bold'>This week</Text>
                     {arrWeekDays.map((item, index) => {
-                        return <View className='flex flex-row mt-4 items-center flex-wrap'>
-                            <View className='flex-row w-1/3'>
-                            <Text className='text-sm text-gray-text font-regular self-center'>
-                                MON
-                            </Text>
+                        return <View className='flex flex-row mt-4 items-center'>
+                            <View className='flex-row w-1/4'>
+                                <Text className='text-sm text-gray-text font-regular'>
+                                    MON
+                                </Text>
                             </View>
-                            <View className='flex-row  w-1/3'>
-                                <Text className='text-sm font-regular self-center'>
+                            <View className='flex-row w-1/4'>
+                                <Text className='text-sm font-regular'>
                                     28
                                 </Text>
-                                <Text className='text-sm text-gray-text font-regular self-center'>
+                                <Text className='text-sm text-gray-text font-regular ml-2'>
                                     18
                                 </Text>
                             </View>
-                            <View className='flex-row  w-1/3'>
-                                <Image className='h-6 w-8' source={imageSource} resizeMode='stretch' />
-                                <Text numberOfLines={1} className='text-sm text-gray-text font-regular self-center '>
-                                    {index==0?'csacascjksankj':index==3?'usbcsb':'asiucvbasjkcbsakjcbasjkb'}
+                            <View className='flex-row w-1/2 overflow-hidden truncate'>
+                                <Image className='h-6 w-8 mr-2' source={imageSource} resizeMode='stretch' />
+                                <Text numberOfLines={1} className='text-sm text-gray-text font-regular'>
+                                    {index == 0 ? 'csacascjksankj' : index == 3 ? 'usbcsb' : 'asiucvbasjkcbsakjcbasjkb'}
                                 </Text>
                             </View>
                         </View>

@@ -18,6 +18,10 @@ module.exports = {
       'gray': '#8492a6',
       'gray-light': '#d3dce6',
     },
+    maxWidth: {
+      '1/2': '50%',
+      '1/4': '25%'
+    },
     fontFamily: {
       sans: ['Graphik', 'sans-serif'],
       serif: ['Merriweather', 'serif'],
