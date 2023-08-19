@@ -13,6 +13,7 @@ module.exports = {
       'base-bg': '#d7d7d7',
       'white': '#ffffff',
       'gray-text': '#b7b7b7',
+      'dark-gray-text':'#979797',
       'light-bg': '#f7f7f7',
       'gray-dark': '#273444',
       'gray': '#8492a6',
