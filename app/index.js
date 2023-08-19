@@ -155,19 +155,19 @@ export default function Page() {
     }
 
     return <SafeAreaView className={`flex flex-1`}>
-        <View className={'flex flex-1 bg-[#d7d7d7] py-8 px-4'}>
+        <View className={'flex flex-1 bg-base-bg py-8 px-4'}>
             <View className={'flex flex-1 rounded-3xl bg-[#ffffff] py-4 px-2'}>
                 <Text className='text-xl font-bold'>Calicut, Kerala</Text>
-                <Text className='text-sm text-[#c3c3c3] font-regular'>{getCurrentDayTime()}</Text>
+                <Text className='text-sm text-gray-text font-regular'>{getCurrentDayTime()}</Text>
                 <Image source={imageSource} className='h-20 w-32 self-center mt-10' resizeMode='stretch' />
                 <Text className='text-3xl font-bold mt-2 self-center'>28</Text>
-                <Text className='text-sm text-[#c3c3c3] font-regular self-center'>Partly Cloudy</Text>
-                <View className={'flex flex-1 rounded-3xl bg-[#f7f7f7] px-4 mt-4 w-full'}>
+                <Text className='text-sm text-gray-text font-regular self-center'>Partly Cloudy</Text>
+                <View className={'flex flex-1 rounded-3xl bg-light-bg px-4 mt-4 w-full'}>
                     <Text className='text-lg font-bold mt-4'>This week</Text>
                     {arrWeekDays.map((item, index) => {
                         return <View className='flex flex-row mt-4 items-center flex-wrap'>
                             <View className='flex-row w-1/3'>
-                            <Text className='text-sm text-[#c3c3c3] font-regular self-center'>
+                            <Text className='text-sm text-gray-text font-regular self-center'>
                                 MON
                             </Text>
                             </View>
@@ -175,13 +175,13 @@ export default function Page() {
                                 <Text className='text-sm font-regular self-center'>
                                     28
                                 </Text>
-                                <Text className='text-sm text-[#c3c3c3] font-regular self-center'>
+                                <Text className='text-sm text-gray-text font-regular self-center'>
                                     18
                                 </Text>
                             </View>
                             <View className='flex-row  w-1/3'>
                                 <Image className='h-6 w-8' source={imageSource} resizeMode='stretch' />
-                                <Text numberOfLines={1} className='text-sm text-[#c3c3c3] font-regular self-center '>
+                                <Text numberOfLines={1} className='text-sm text-gray-text font-regular self-center '>
                                     {index==0?'csacascjksankj':index==3?'usbcsb':'asiucvbasjkcbsakjcbasjkb'}
                                 </Text>
                             </View>
