@@ -4,147 +4,43 @@ import {
     useQuery,
 } from '@tanstack/react-query'
 import { getWeatherDetails } from '../queries';
-import { useMemo } from 'react';
-
+import { useEffect, useMemo, useState } from 'react';
+import * as Location from 'expo-location';
 const arrWeekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-
-const weatherDummyData = {
-    "city": {
-        "id": 3163858,
-        "name": "Calicut, Kerala",
-        "coord": {
-            "lon": 10.99,
-            "lat": 44.34
-        },
-        "country": "IND",
-        "population": 4593,
-        "timezone": 7200
-    },
-    "cod": "200",
-    "message": 0.0582563,
-    "cnt": 7,
-    "list": [
-        {
-            "dt": 1661857200,
-            "sunrise": 1661834187,
-            "sunset": 1661882248,
-            "temp": {
-                "day": 299.66,
-                "min": 288.93,
-                "max": 299.66,
-                "night": 290.31,
-                "eve": 297.16,
-                "morn": 288.93
-            },
-            "feels_like": {
-                "day": 299.66,
-                "night": 290.3,
-                "eve": 297.1,
-                "morn": 288.73
-            },
-            "pressure": 1017,
-            "humidity": 44,
-            "weather": [
-                {
-                    "id": 500,
-                    "main": "Rain",
-                    "description": "light rain",
-                    "icon": "10d"
-                }
-            ],
-            "speed": 2.7,
-            "deg": 209,
-            "gust": 3.58,
-            "clouds": 53,
-            "pop": 0.7,
-            "rain": 2.51
-        },
-        {
-            "dt": 1661943600,
-            "sunrise": 1661920656,
-            "sunset": 1661968542,
-            "temp": {
-                "day": 295.76,
-                "min": 287.73,
-                "max": 295.76,
-                "night": 289.37,
-                "eve": 292.76,
-                "morn": 287.73
-            },
-            "feels_like": {
-                "day": 295.64,
-                "night": 289.45,
-                "eve": 292.97,
-                "morn": 287.59
-            },
-            "pressure": 1014,
-            "humidity": 60,
-            "weather": [
-                {
-                    "id": 500,
-                    "main": "Rain",
-                    "description": "light rain",
-                    "icon": "10d"
-                }
-            ],
-            "speed": 2.29,
-            "deg": 215,
-            "gust": 3.27,
-            "clouds": 66,
-            "pop": 0.82,
-            "rain": 5.32
-        },
-        {
-            "dt": 1662030000,
-            "sunrise": 1662007126,
-            "sunset": 1662054835,
-            "temp": {
-                "day": 293.38,
-                "min": 287.06,
-                "max": 293.38,
-                "night": 287.06,
-                "eve": 289.01,
-                "morn": 287.84
-            },
-            "feels_like": {
-                "day": 293.31,
-                "night": 287.01,
-                "eve": 289.05,
-                "morn": 287.85
-            },
-            "pressure": 1014,
-            "humidity": 71,
-            "weather": [
-                {
-                    "id": 500,
-                    "main": "Rain",
-                    "description": "light rain",
-                    "icon": "10d"
-                }
-            ],
-            "speed": 2.67,
-            "deg": 60,
-            "gust": 2.66,
-            "clouds": 97,
-            "pop": 0.84,
-            "rain": 4.49
-        }
-    ]
-}
 
 const imageSource = require('../assets/weatherUpdate.png')
 
 export default function Page() {
 
-    const { data, isLoading, isError } = useQuery(['weatherData'], getWeatherDetails, {
+
+    const [latitude, setLatitude] = useState(null)
+    const [longitude, setLongitude] = useState(null)
+
+    useEffect(() => {
+        getInitialData()
+    }, [])
+
+    const getInitialData = async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            //If permission denied, then default location is set
+            setLatitude(12.93)
+            setLongitude(77.63)
+            return;
+        }
+        let location = await Location.getCurrentPositionAsync({});
+        let lat = location?.coords?.latitude
+        let long = location?.coords?.longitude
+        setLatitude(lat)
+        setLongitude(long)
+    }
+
+    const { data, isLoading, isError, } = useQuery(['weatherData', { latitude: latitude, longitude: longitude }], getWeatherDetails, {
         cacheTime: 7200000, //Data is cached for two hours
         refetchInterval: 7200000, //Data is refetched after every two hours
-        refetchIntervalInBackground: true //Fetch data after 2 hours even if app is in background state
+        refetchIntervalInBackground: true, //Fetch data after 2 hours even if app is in background state
+        enabled: !!latitude && !!longitude //Wait for latitude and longitude data to fetch data
     })
-
-    console.log('Loading is', isLoading)
-    console.log('Error is', isError)
-    console.log('Data is', data)
 
     const getCurrentDayTime = useMemo(() => {
         let currentDay = new Date().getDay()
@@ -157,7 +53,7 @@ export default function Page() {
             currentTime = `${currentTime} AM`
         }
         return `${currentDay}, ${currentTime}`
-    }, [new Date().getHours(),new Date().getDay()])
+    }, [new Date().getHours(), new Date().getDay()])
 
     if (isLoading) {
         return <View className='flex flex-1 items-center justify-center'>
@@ -176,7 +72,7 @@ export default function Page() {
                 <View className={'flex flex-1 rounded-3xl bg-light-bg p-4'}>
                     <Text className='text-lg font-bold'>This week</Text>
                     {arrWeekDays.map((item, index) => {
-                        return <View className='flex flex-row mt-4 items-center'>
+                        return <View key={`${index} day`} className='flex flex-row mt-4 items-center'>
                             <View className='flex-row w-1/4'>
                                 <Text className='text-sm text-gray-text font-regular'>
                                     MON
