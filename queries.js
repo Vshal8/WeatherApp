@@ -1,11 +1,18 @@
 import axios from 'axios';
 import { WEATHER_API_KEY } from './globalConstants';
 
-export const getWeatherDetails = async (params) => {
+export const getWeatherForecast = async (params) => {
     const location = params['queryKey'][1]
     let lat = location['latitude']
     let long = location['longitude']
-    let response = await axios.get(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${long}&cnt={7}&appid=${WEATHER_API_KEY}`)
-    console.log('Status of response is', response.status)
+    let response = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${long}&appid=${WEATHER_API_KEY}`)
     return response.data
-} 
+}
+
+export const getCurrentWeather = async (params) => {
+    const location = params['queryKey'][1]
+    let lat = location['latitude']
+    let long = location['longitude']
+    let response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${WEATHER_API_KEY}`)
+    return response.data
+}
